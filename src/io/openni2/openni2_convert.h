@@ -36,7 +36,7 @@
 #include "io/openni2/openni2_device_info.h"
 #include "io/openni2/openni2_video_mode.h"
 
-#include "OpenNI.h"
+#include <openni2/OpenNI.h>
 
 #include <vector>
 

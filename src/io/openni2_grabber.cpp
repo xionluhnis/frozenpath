@@ -38,7 +38,6 @@
  */
 
 #include <pcl/pcl_config.h>
-#ifdef HAVE_OPENNI2
 
 #include "openni2_grabber.h"
 #include "openni2/openni2_device_manager.h"
@@ -345,10 +344,12 @@ pcl::io::OpenNI2Grabber::setupDevice (const std::string& device_id, const Mode& 
   {
     throw;
   }
+  /*
   catch (...)
   {
     PCL_THROW_EXCEPTION (pcl::IOException, "unknown error occured");
   }
+  */
 
   typedef pcl::io::openni2::OpenNI2VideoMode VideoMode;
 
@@ -934,5 +935,3 @@ void pcl::io::OpenNI2Grabber::processIRFrame (openni::VideoStream& stream)
 
   irCallback (image, NULL);
 }
-
-#endif // HAVE_OPENNI2

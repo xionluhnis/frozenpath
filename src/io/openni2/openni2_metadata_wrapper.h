@@ -43,10 +43,8 @@
 
 #include <pcl/pcl_config.h>
 
-#if defined(HAVE_OPENNI2)
-
 #include <pcl/io/image_metadata_wrapper.h>
-#include <io/openni2/openni.h>
+#include "io/openni2/openni.h"
 
 namespace pcl
 {
@@ -111,6 +109,5 @@ namespace pcl
     } // namespace
   }
 }
-#endif // HAVE_OPENNI2
 
 #endif // PCL_IO_OPENNI2_METADATA_WRAPPER_H_

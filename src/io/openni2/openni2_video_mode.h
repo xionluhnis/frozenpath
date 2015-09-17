@@ -35,7 +35,7 @@
 #include <cstddef>
 #include <ostream>
 
-#include <OpenNI.h>
+#include <openni2/OpenNI.h>
 
 namespace pcl
 {

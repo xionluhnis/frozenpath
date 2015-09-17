@@ -35,7 +35,6 @@
  *
  */
 #include <pcl/pcl_config.h>
-#ifdef HAVE_OPENNI2
 
 #ifndef PCL_IO_OPENNI2_OPENNI_H_
 #define PCL_IO_OPENNI2_OPENNI_H_
@@ -44,8 +43,8 @@
 #  pragma GCC system_header
 #endif
 
-#include <OpenNI.h>
-#include <OniVersion.h>
+#include <openni2/OpenNI.h>
+#include <openni2/OniVersion.h>
 
 // Standard resolutions, ported from OpenNI 1.x. To be removed later.
 #define 	XN_QQVGA_X_RES   160
@@ -84,4 +83,3 @@
 #define 	XN_DV_Y_RES   720
 
 #endif // PCL_IO_OPENNI2_OPENNI_H_
-#endif // HAVE_OPENNI2

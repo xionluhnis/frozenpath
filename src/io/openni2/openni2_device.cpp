@@ -29,8 +29,8 @@
  *      Author: Julius Kammerl (jkammerl@willowgarage.com)
  */
 
-#include <OpenNI.h>
-#include <PS1080.h> // For XN_STREAM_PROPERTY_EMITTER_DCMOS_DISTANCE property
+#include <openni2/OpenNI.h>
+#include <openni2/PS1080.h> // For XN_STREAM_PROPERTY_EMITTER_DCMOS_DISTANCE property
 
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
@@ -89,9 +89,12 @@ pcl::io::openni2::OpenNI2Device::OpenNI2Device (const std::string& device_URI) :
   // Set default resolution if not reading a file
   if (!openni_device_->isFile ())
   {
-    setColorVideoMode (getDefaultColorMode ());
-    setDepthVideoMode (getDefaultDepthMode ());
-    setIRVideoMode (getDefaultIRMode ());
+    if(getSupportedColorVideoModes().size())
+    	setColorVideoMode (getDefaultColorMode ());
+    if(getSupportedDepthVideoModes().size())
+    	setDepthVideoMode (getDefaultDepthMode ());
+    if(getSupportedIRVideoModes().size())
+    	setIRVideoMode (getDefaultIRMode ());
   }
 
   if (openni_device_->isFile ())
