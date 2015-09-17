@@ -44,6 +44,7 @@ class ofApp : public ofBaseApp{
         // Point Cloud
         pcl::Grabber*		pcGrabber;
         ofMeshPtr				pointCloud;
+        float 					minZ, maxZ;
         
         // Parameters
         bool						running;

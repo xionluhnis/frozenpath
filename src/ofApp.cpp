@@ -10,15 +10,16 @@ void ofApp::setup()
     // ofEnableAntiAliasing();
     ofEnableDepthTest(); //make sure we test depth for 3d
     ofSetVerticalSync(true);
-    ofEnableLighting();
+    // ofEnableLighting();
     // ofEnableAlphaBlending();
     // ofEnableBlendMode(OF_BLENDMODE_ALPHA);
     ofEnableSmoothing();
+    cam.setDistance(1);
 
     // light the scene to show off why normals are important
-    light.enable();
-    light.setPointLight();
-    light.setPosition(0, 0, 300);
+    // light.enable();
+    // light.setPointLight();
+    // light.setPosition(0, 0, 10);
 
     std::cout << "Initializing Depth Sensor with OpenNI2.\n";
     pcGrabber = new pcl::io::OpenNI2Grabber();
@@ -39,7 +40,7 @@ void ofApp::update()
 //--------------------------------------------------------------
 void ofApp::draw()
 {
-    ofEnableLighting();
+    // ofEnableLighting();
     ofSetColor(255, 255, 255, 255);
 
     // draw background
@@ -51,10 +52,15 @@ void ofApp::draw()
     // display point cloud
     ofMeshPtr pc = pointCloud; // create a copy so that it may be replaced while being used (from OpenNI update)
     if(pc) {
+    		ofPushMatrix();
     		ofSetColor(255, 255, 255, 150);
     		glPointSize(4);
     		glEnable(GL_POINT_SMOOTH);
+    		// ofScale(1, 1, 1);
+    		ofRotate(-90, 1, 0, 0);
+    		ofTranslate(0, 0, -minZ * 0.5);
     		pc->draw();
+    		ofPopMatrix();
     }
     cam.end();
     
@@ -77,12 +83,16 @@ void ofApp::updateCloud(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 		if(!running) return;
 		std::vector<ofVec3f> points;
 		points.resize(cloud->points.size()); // allocate full point cloud
+		float minZ, maxZ;
+		minZ = maxZ = cloud->points.size() ? cloud->points[0].z : 0;
 		for(unsigned int i = 0; i < cloud->points.size(); ++i){
 			points[i] = ofVec3f(cloud->points[i].x, cloud->points[i].y, cloud->points[i].z);
 		}
 		ofMesh *newPC = new ofMesh();
 		newPC->setMode(OF_PRIMITIVE_POINTS);
 		newPC->addVertices(points);
+		this->minZ = 0.9 * this->minZ + 0.1 * minZ;
+		this->maxZ = 0.9 * this->maxZ + 0.1 * maxZ;
 		pointCloud.reset(newPC); // do the transfer now
 }
 
