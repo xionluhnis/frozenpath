@@ -9,15 +9,25 @@
 
 #include "ofMain.h"
 #include "camera/ofStableCam.h"
+#include "ui/ofButton.h"
+
+#include <vector>
 
 #undef Success
 #undef Status
+
+#define CAPTURE_MEMORY 	5
 
 typedef boost::shared_ptr<ofMesh> ofMeshPtr;
 
 namespace pcl {
 		class Grabber;
 }
+
+enum Action {
+		Capture = 0,
+		Running = 1
+};
 
 class ofApp : public ofBaseApp{
 	public:
@@ -43,10 +53,10 @@ class ofApp : public ofBaseApp{
         
         // Point Cloud
         pcl::Grabber*		pcGrabber;
-        ofMeshPtr				pointCloud;
+        ofMeshPtr				pointCloud[CAPTURE_MEMORY];
         float 					minZ, maxZ;
+        unsigned int 		captured;
         
-        // Parameters
-        bool						running;
-        
+        // Parameters / UI
+        std::vector<ofButton> ui;
 };
