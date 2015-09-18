@@ -26,7 +26,8 @@ namespace pcl {
 
 enum Action {
 		Capture = 0,
-		Running = 1
+		Running = 1,
+		Unknown = 2
 };
 
 class ofApp : public ofBaseApp{

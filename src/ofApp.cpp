@@ -1,6 +1,10 @@
 #include "ofApp.h"
 #include <cstdlib>
 #include <iostream>
+#include <iomanip>
+#include <sstream>
+
+#include <pcl/io/pcd_io.h>
 
 //--------------------------------------------------------------
 void ofApp::setup()
@@ -70,13 +74,13 @@ void ofApp::draw()
     ofPushMatrix();
     // ofScale(1, 1, 1);
 		ofRotate(-90, 1, 0, 0);
-		ofTranslate(0, 0, -minZ * 0.5);
+		ofTranslate(0, 0, 0);
     for(int i = CAPTURE_MEMORY - 1; i >= 0; --i){
 				ofMeshPtr pc = pointCloud[i]; // create a copy so that it may be replaced while being used (from OpenNI update)
 				if(pc) {
 						int I = 255 / (i + 1);
 						int A = 150 / (i + 1);
-						ofSetColor(I, I, I, A);
+						ofSetColor(I, i == 0 ? 255 : 150, I, A);
 						glPointSize(float(CAPTURE_MEMORY) / float(i + 1));
 						glEnable(GL_POINT_SMOOTH);
 						pc->draw();
@@ -90,10 +94,18 @@ void ofApp::draw()
     ofSetColor(0, 0, 0, 100);
     ofRect(20, 20, 200, 50);
     ofSetColor(255, 255, 255);
-    if(running){
+    if(ui[Running].state){
     		ofDrawBitmapString("Running", 35, 35);
     } else {
     		ofDrawBitmapString("Paused", 35, 35);
+    }
+    if(captured){
+    		ofSetColor(0, 0, 0, 100);
+    		ofRect(20, 70, 200, 50);
+    		ofSetColor(255, 255, 255);
+    		std::stringstream str;
+    		str << captured << " frames";
+    		ofDrawBitmapString(str.str(), 35, 85);
     }
     for(unsigned int i = 0; i < ui.size(); ++i){
 				if(ui[i].state){
@@ -111,16 +123,16 @@ void ofApp::draw()
 //--------------------------------------------------------------
 void ofApp::updateCloud(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 {
-		if(!pcGrabber->isRunning()) return;
-		if(!ui[Capture].state) {
-				pcGrabber->stop(); // note: we can still use the current point captured point cloud	
+		// should we stop the updates?
+		if(!ui[Running].state) {
+				pcGrabber->stop(); // note: we can still use the current point captured point cloud
 		}
 		
 		// save pc in capture
 		if(ui[Capture].state){
 				std::stringstream file("capture");
-				file << captured << ".pcd";
-				pcl::io::savePCDFile(file.str(), cloud, true); // binary so we can map directly to disk
+				file << std::setfill('0') << std::setw(7) << captured << ".pcd";
+				pcl::io::savePCDFile(file.str(), *cloud, true); // binary so we can map directly to disk
 				++captured; // increment capture index
 		}
 		
@@ -139,7 +151,16 @@ void ofApp::updateCloud(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud)
 		this->maxZ = 0.9 * this->maxZ + 0.1 * maxZ;
 		
 		// transfer it
-		pointCloud.reset(newPC); // do the transfer now
+		if(ui[Capture].state){
+				// shift to the right
+				for(int i = CAPTURE_MEMORY - 1; i > 0; --i) {
+						pointCloud[i].swap(pointCloud[i-1]);
+				}
+				pointCloud[0].reset(newPC); // new transfer
+		} else {
+				pointCloud[0].reset(newPC); // do the transfer now
+				for(unsigned int i = 1; i < CAPTURE_MEMORY; ++i) pointCloud[i].reset();
+		}
 }
 
 //--------------------------------------------------------------
@@ -152,7 +173,7 @@ void ofApp::keyPressed(int key)
         break;
     case 'p':
     case ' ':
-        running = !running;
+        ui[Running].state = !ui[Running].state;
         break;
     default:
         std::cout << "key '" << key << "' pressed.\n";
@@ -199,10 +220,9 @@ void ofApp::mouseReleased(int x, int y, int button)
     bool newState = ui[action].state;
     switch(action){
     		case Capture:
-    				// start a capture (end = do nothing special)
     				if(newState){
     						// start capture
-    						capture = 0;
+    						captured = 0;
     				}
     				break;
     		case Running:
@@ -210,6 +230,8 @@ void ofApp::mouseReleased(int x, int y, int button)
     				if(newState){
     						pcGrabber->start();
     				}
+    				break;
+    		default:
     				break;
     }
 }
