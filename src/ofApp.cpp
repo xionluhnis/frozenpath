@@ -109,7 +109,7 @@ void ofApp::draw()
     }
     for(unsigned int i = 0; i < ui.size(); ++i){
 				if(ui[i].state){
-						ofSetColor(100, 100, 255, 255);
+						ofSetColor(100, 100, 255, 250);
 				} else if(ui[i].hover){
 						ofSetColor(255, 255, 255, 255);
 				} else  {

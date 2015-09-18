@@ -87,10 +87,10 @@ void ofStableCam::reset(){
 	moveZ = 0;
 
 	enableMouseMiddleButton();
-  setDistance(13.0f);
+  setDistance(1.0f);
   setNearClip(0.1f);
   setUp(ofVec3f(0.0f, 0.0f, 1.0f));
-  setPosition(0, -10.0f, 3.0f);
+  setPosition(0, -1.0f, 0.1f);
   setTarget(ofVec3f(0.0f, 0.0f, 0.0f));
 }
 /**

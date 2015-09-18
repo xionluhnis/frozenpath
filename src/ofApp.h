@@ -49,15 +49,15 @@ class ofApp : public ofBaseApp{
 
     private:
         // World objects
-        ofStableCam     cam;
-        ofLight         light;
+        ofStableCam     	cam;
+        ofLight         	light;
         
         // Point Cloud
-        pcl::Grabber*		pcGrabber;
-        ofMeshPtr				pointCloud[CAPTURE_MEMORY];
-        float 					minZ, maxZ;
-        unsigned int 		captured;
+        pcl::Grabber*			pcGrabber;
+        ofMeshPtr					pointCloud[CAPTURE_MEMORY];
+        float 						minZ, maxZ;
+        unsigned int 			captured;
         
-        // Parameters / UI
+        // UI
         std::vector<ofButton> ui;
 };
